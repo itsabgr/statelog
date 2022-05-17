@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option go_package = "../internal/pb";
+import "google/protobuf/timestamp.proto";
+package api;
+
+service API {
+  rpc GetEvent(GetEventInput) returns (GetEventOutput);
+  rpc PushEvent(PushEventInput) returns (PushEventOutput);
+}
+message PushEventOutput {
+  bytes Signer = 1;
+  bytes Sig = 2;
+}
+message PushEventInput{
+  Event Event = 1;
+}
+message GetEventOutput {
+  Event Event = 1;
+  bool Confirm = 2;
+}
+message GetEventInput {
+  bytes Signer = 1;
+  fixed64 Index = 2;
+}
+enum EventKind{
+  Empty = 0;
+}
+message EventPtr {
+  bytes Signer = 1;
+  fixed64 Index = 2;
+  bytes Digest = 3;
+}
+message Event {
+  bytes Sig = 1;
+  bytes Signer = 2;
+  fixed64 Index = 3;
+  EventKind Kind = 5;
+  repeated  EventPtr Events = 6;
+  bytes Payload = 7;
+}
